@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: Submit Coffee Shop Order - OpenAPI 3.0
+  description: This API allows a user to submit an order at a coffee shop.
+  version: 1.0.0
+paths:
+  /order:
+    post:
+      summary: Places order
+      description: Place a new order with the items in the cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: successfully placed order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '405':
+          description: Invalid input
+  /order/{orderId}:
+    get:
+      summary: Finds the order placed using the associated order ID
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order that needs to be fetched
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfully fetched order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'          
+        '400':
+          description: Invalid order ID
+        '404':
+          description: No order found with corresponding order ID
+    delete:
+      summary: Deletes/cancels the order with the corresponding order ID
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of the order that needs to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        '400':
+          description: Invalid order ID
+        '404':
+          description: Order not found
+        '204':
+          description: (No content)
+        '200':
+          description: Order successfully delete
+  
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10787
+        name:
+          type: string
+          example: 'John Doe'
+        email:
+          type: string
+          example: 'Jdoe@gmail.com'
+        phone:
+          type: string
+          example: '123-456-7891'
+        pickupTime:
+          type: string
+          example: '10 min'
+        Items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1078
+        name:
+          type: string
+          example: 'small coffee'
+        price:
+          type: string
+          example: '3.99'
+        quantity:
+          type: integer
+          example: 10
